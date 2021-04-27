@@ -95,6 +95,11 @@ n_caracteres(N, Caractere, N_caracteres, Temp) :-
 % combinacao(N, Els, Comb) significa que Comb eh uma
 % combinacao dos elementos de Els, N a N
 %-------------------------------------------------------------------------------
+lista_soma([Head|Tail],Sum):-
+    lista_soma(Tail,M) , Sum is M + Head.
+lista_soma([],0).
+%-------------------------------------------------------------------------------
+
 combinacao(0,_,[]).
 combinacao(N,[X|T], [X|Comb]):-
     N > 0,
@@ -105,7 +110,7 @@ combinacao(N, [_|T], Comb):-
     combinacao(N, T, Comb).
 
 combinacoes_soma(N, Els, Soma, Combs):-
-    findall([X1,Y1], (combinacao(N, Els, [X1,Y1]) , Soma is X1+Y1), Combs ).
+    findall(Res, (combinacao(N, Els, Res), lista_soma(Res,Sum), Soma == Sum), Combs ).
 
 
 
