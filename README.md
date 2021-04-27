@@ -1,3 +1,6 @@
-# LP_Projeto_20-21
-# Projeto de Logica de Programação
+# Solucionador de Puzzles Kakuro
+ ### Projeto para Logica de Programação (LP)
 
+# `Prolog` 
+
+- Instituto Superiror Técnico (**Ist**)
