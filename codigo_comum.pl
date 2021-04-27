@@ -104,3 +104,8 @@ combinacao(N, [_|T], Comb):-
     N > 0,
     combinacao(N, T, Comb).
 
+combinacoes_soma(N, Els, Soma, Combs):-
+    findall([X1,Y1], (combinacao(N, Els, [X1,Y1]) , Soma is X1+Y1), Combs ).
+
+
+
