@@ -1,4 +1,11 @@
 
+%--------------Help-Commands-------------------
+load:-
+    [codigo_comum].
+exit:-
+    halt.
+%----------------------------------------------
+
 :- use_module(library(clpfd)).
 %-------------------------------------------------------------------------------
 % mat_transposta(Matriz, Transp) significa que Transp e' a transposta de Matriz
@@ -109,8 +116,15 @@ combinacao(N, [_|T], Comb):-
     N > 0,
     combinacao(N, T, Comb).
 
-combinacoes_soma(N, Els, Soma, Combs):-
+combinacoes_soma(N, Els, Soma, Combs):- % 3.1.1
     findall(Res, (combinacao(N, Els, Res), lista_soma(Res,Sum), Soma == Sum), Combs ).
+
+%-------------------------------------------------------------------------------
+
+permutacoes_soma(N, Els, Soma, Perms):- %3.1.2
+    fail.
+
+
 
 
 
