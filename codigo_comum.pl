@@ -105,6 +105,12 @@ n_caracteres(N, Caractere, N_caracteres, Temp) :-
 lista_soma([Head|Tail],Sum):-
     lista_soma(Tail,M) , Sum is M + Head.
 lista_soma([],0).
+
+notmember(List,X):-
+    \+ member(X,List).
+
+permutacao(L, List):-
+    permutation(List,L).
 %-------------------------------------------------------------------------------
 
 combinacao(0,_,[]).
@@ -117,14 +123,10 @@ combinacao(N, [_|T], Comb):-
     combinacao(N, T, Comb).
 
 combinacoes_soma(N, Els, Soma, Combs):- % 3.1.1
-    findall(Res, (combinacao(N, Els, Res), lista_soma(Res,Sum), Soma == Sum), Combs ).
+     findall(Res, (combinacao(N, Els, Res), lista_soma(Res,Sum), Soma == Sum), Combs ).
 
 %-------------------------------------------------------------------------------
 
 permutacoes_soma(N, Els, Soma, Perms):- %3.1.2
-    fail.
-
-
-
-
-
+     findall(Res1, (combinacao(N, Els, Res), lista_soma(Res,Sum), Soma == Sum, permutation(Res,Res1) ), Res2 ),
+     sort(Res2,Perms).
