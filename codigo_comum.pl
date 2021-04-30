@@ -5,7 +5,6 @@ load:-
 exit:-
     halt.
 %----------------------------------------------
-
 :- use_module(library(clpfd)).
 %-------------------------------------------------------------------------------
 % mat_transposta(Matriz, Transp) significa que Transp e' a transposta de Matriz
@@ -108,9 +107,6 @@ lista_soma([],0).
 
 notmember(List,X):-
     \+ member(X,List).
-
-permutacao(L, List):-
-    permutation(List,L).
 %-------------------------------------------------------------------------------
 
 combinacao(0,_,[]).
@@ -130,3 +126,14 @@ combinacoes_soma(N, Els, Soma, Combs):- % 3.1.1
 permutacoes_soma(N, Els, Soma, Perms):- %3.1.2
      findall(Res1, (combinacao(N, Els, Res), lista_soma(Res,Sum), Soma == Sum, permutation(Res,Res1) ), Res2 ),
      sort(Res2,Perms).
+
+%-------------------------------------------------------------------------------
+
+espaco_fila(Fila, Esp, H_V):-
+    fail.
+
+
+
+
+
+
