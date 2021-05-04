@@ -110,21 +110,9 @@ notmember(List,X):-
     \+ member(X,List).
 %-------------------------------------------------------------------------------
 getBetween(Start,End,List,Res):-
-    getBetween(Start,End,List, 0 ,[], Res).
-    
-getBetween(_,End,_, End, Res, Res) :-
-    !.
-
-getBetween(Start,End,[Head|Tail], Atual, Aux, Res) :-
-    Atual > Start,!,
-    append(Aux, [Head], Aux1),
-    Y is Atual + 1,
-    getBetween(Start,End,Tail, Y, Aux1, Res).
-
-getBetween(Start,End,[_|Tail], Atual, Aux, Res) :-
-    Y is Atual + 1,
-    getBetween(Start,End,Tail, Y, Aux, Res).
-
+    X is Start + 1,
+    Y is End - 1,
+    bagof(Member,Ele^(between(X,Y,Ele),nth0(Ele,List,Member)),Res).
 %-------------------------------------------------------------------------------
 
 combinacao(0,_,[]).
@@ -148,13 +136,9 @@ permutacoes_soma(N, Els, Soma, Perms):- %3.1.2
 %-------------------------------------------------------------------------------
 
 espaco_fila(Fila, Esp, h):-
-    findall(espaco(Sum,[Head|Tail]),(Fila)    )
     fail.
 
 
-
-espaco_fila(Fila, Esp, v):-
-    fail.
 
 
 
