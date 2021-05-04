@@ -6,6 +6,7 @@ exit:-
     halt.
 %----------------------------------------------
 :- use_module(library(clpfd)).
+:-[codigo_comum].
 %-------------------------------------------------------------------------------
 % mat_transposta(Matriz, Transp) significa que Transp e' a transposta de Matriz
 %-------------------------------------------------------------------------------
@@ -108,6 +109,23 @@ lista_soma([],0).
 notmember(List,X):-
     \+ member(X,List).
 %-------------------------------------------------------------------------------
+getBetween(Start,End,List,Res):-
+    getBetween(Start,End,List, 0 ,[], Res).
+    
+getBetween(_,End,_, End, Res, Res) :-
+    !.
+
+getBetween(Start,End,[Head|Tail], Atual, Aux, Res) :-
+    Atual > Start,!,
+    append(Aux, [Head], Aux1),
+    Y is Atual + 1,
+    getBetween(Start,End,Tail, Y, Aux1, Res).
+
+getBetween(Start,End,[_|Tail], Atual, Aux, Res) :-
+    Y is Atual + 1,
+    getBetween(Start,End,Tail, Y, Aux, Res).
+
+%-------------------------------------------------------------------------------
 
 combinacao(0,_,[]).
 combinacao(N,[X|T], [X|Comb]):-
@@ -129,11 +147,14 @@ permutacoes_soma(N, Els, Soma, Perms):- %3.1.2
 
 %-------------------------------------------------------------------------------
 
-espaco_fila(Fila, Esp, H_V):-
+espaco_fila(Fila, Esp, h):-
+    findall(espaco(Sum,[Head|Tail]),(Fila)    )
     fail.
 
 
 
+espaco_fila(Fila, Esp, v):-
+    fail.
 
 
 
