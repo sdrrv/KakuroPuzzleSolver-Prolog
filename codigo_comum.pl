@@ -135,8 +135,35 @@ permutacoes_soma(N, Els, Soma, Perms):- %3.1.2
 
 %-------------------------------------------------------------------------------
 
-espaco_fila(Fila, Esp, h):-
-    fail.
+espaco_fila(Lista,Esp,H_V):-
+    espaco_fila(Lista,Esp,H_V,_,[]).
+
+espaco_fila([],espaco(Number,List),_,Number,List).
+
+espaco_fila([ Head |_],espaco(Number,List),_,Number,List):-
+    nonvar(Number),
+    nonvar(Head).    
+
+espaco_fila([[_,V]|Tail],Esp,v,_,_):-
+    V \= 0,
+    espaco_fila(Tail,Esp,v,V,[]).
+
+espaco_fila([[H,_]|Tail],Esp,h,_,_):-
+    H \= 0,
+    espaco_fila(Tail,Esp,h,H,[]).
+
+espaco_fila([[_,V]|Tail],Esp,v,_,_):-
+    V==0,
+    espaco_fila(Tail,Esp,v,_,_).
+
+espaco_fila([[H,_]|Tail],Esp,h,_,_):-
+    H==0,
+    espaco_fila(Tail,Esp,h,_,_).
+
+espaco_fila([Head|Tail],Esp,H_V,Number,List):-
+    var(Head),
+    append(List,[Head],Y),
+    espaco_fila(Tail,Esp,H_V,Number,Y).
 
 
 
