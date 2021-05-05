@@ -1,4 +1,4 @@
-:- [codigo_comum, puzzles_publicos].
+:- [codigo_comum].
 %--------------Help-Commands-------------------
 load:-
     [main].
@@ -36,6 +36,11 @@ var_in_espaco([_|Tail],Var):-
 
 is_same_espaco(espaco(_,Esp),List):-
     Esp == List.
+
+get_soma_espaco(espaco(Soma,_),Soma).
+
+get_lenght_espaco(espaco(_,Lista), Lenght):-
+    length(Lista, Lenght).
 
 %-------------------------------------------------------------------------------
 
@@ -97,8 +102,23 @@ espacos_puzzle_aux(Puzzle,H_V,Res):-
     concat(Res0,Res).
 
 %--------------------------3.1.6----------------------------------
+
 espacos_com_posicoes_comuns(Espacos, espaco(_,Esp), Esps_com):-
     bagof(Espaco, Main^(member(Espaco, Espacos), member(Main, Esp), var_in_espaco(Espaco, Main), \+ is_same_espaco(Espaco,Esp) ), Esps_com).
+
+%--------------------------3.1.7----------------------------------
+
+permutacoes_soma_espacos(Espacos, Perms_soma):-
+    reverse(Espacos,X),
+    permutacoes_soma_espacos(X,[],Perms_soma).
+
+permutacoes_soma_espacos([Head|Tail],Aux,Perms_soma):-
+    get_soma_espaco(Head,Sum),
+    get_lenght_espaco(Head,Lenght),
+    permutacoes_soma(Lenght,[1,2,3,4,5,6,7,8,9],Sum,X),
+    append([[Head,X]],Aux,Y ),
+    permutacoes_soma_espacos(Tail,Y,Perms_soma).
+permutacoes_soma_espacos([],Aux,Aux).
 
 
 
