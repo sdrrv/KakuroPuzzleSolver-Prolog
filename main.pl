@@ -11,11 +11,21 @@ lista_soma([],0).
 
 notmember(List,X):- %Returns True if X is not in the Lists.
     \+ member(X,List).
-%-------------------------------------------------------------------------------
+
 getBetween(Start,End,List,Res):- 
     X is Start + 1,
     Y is End - 1,
     bagof(Member,Ele^(between(X,Y,Ele),nth0(Ele,List,Member)),Res).
+
+concat(List,Res):-
+    concat(List,Res0,[]),
+    reverse(Res0,Res).
+
+concat([],Res,Res).
+concat([Head|Tail],Res,Aux):-
+    append(Head,Aux,Y),
+    concat(Tail,Res,Y).
+
 %-------------------------------------------------------------------------------
 
 combinacoes_soma(N, Els, Soma, Combs):- % 3.1.1
@@ -72,7 +82,8 @@ espacos_puzzle(Puzzle,Espacos):-
     append(Res01, Res02, Espacos).
 
 espacos_puzzle_aux(Puzzle,H_V,Res):- 
-    bagof(Espaco,(member(Fila, Puzzle), espacos_fila(H_V, Fila, Espaco)), Res).
+    bagof(Espaco,Fila^(member(Fila, Puzzle), espacos_fila(H_V, Fila, Espaco)), Res0),
+    concat(Res0,Res).
 
 
 
