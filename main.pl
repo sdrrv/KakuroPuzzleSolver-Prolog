@@ -1,4 +1,4 @@
-:- [codigo_comum].
+:- [codigo_comum, puzzles_publicos].
 %--------------Help-Commands-------------------
 load:-
     [main].
@@ -12,7 +12,7 @@ lista_soma([],0).
 notmember(List,X):- %Returns True if X is not in the Lists.
     \+ member(X,List).
 %-------------------------------------------------------------------------------
-getBetween(Start,End,List,Res):-
+getBetween(Start,End,List,Res):- 
     X is Start + 1,
     Y is End - 1,
     bagof(Member,Ele^(between(X,Y,Ele),nth0(Ele,List,Member)),Res).
@@ -27,8 +27,7 @@ permutacoes_soma(N, Els, Soma, Perms):- %3.1.2
      findall(Res1, (combinacao(N, Els, Res), lista_soma(Res,Sum), Soma == Sum, permutation(Res,Res1) ), Res2 ),
      sort(Res2,Perms).
 
-%-------------------------------------------------------------------------------
-
+%-----------------------------------3.1.3----------------------------------------
 espaco_fila(Lista,Esp,H_V):-
     espaco_fila(Lista,Esp,H_V,_,[]).
 
@@ -61,5 +60,19 @@ espaco_fila([Head|Tail],Esp,H_V,Number,List):-
     espaco_fila(Tail,Esp,H_V,Number,Y).
 %-------------------------------------------------------------
 
-espacos_fila(H_V, Fila, Espacos):-
+espacos_fila(H_V, Fila, Espacos):- %3.1.4
     bagof(Esp,(espaco_fila(Fila,Esp,H_V)),Espacos).
+
+%-------------------------------------------------------------
+
+espacos_puzzle(Puzzle,Espacos):-
+    espacos_puzzle_aux(Puzzle,h,Res01),
+    mat_transposta(Puzzle, Trans),
+    espacos_puzzle_aux(Trans,v,Res02),
+    append(Res01, Res02, Espacos).
+
+espacos_puzzle_aux(Puzzle,H_V,Res):- 
+    bagof(Espaco,(member(Fila, Puzzle), espacos_fila(H_V, Fila, Espaco)), Res).
+
+
+
