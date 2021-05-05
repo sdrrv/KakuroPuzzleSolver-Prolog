@@ -26,6 +26,14 @@ concat([Head|Tail],Res,Aux):-
     append(Head,Aux,Y),
     concat(Tail,Res,Y).
 
+var_in_espaco(espaco(_,Espacos),Var):-
+    var_in_espaco(Espacos,Var).
+
+var_in_espaco([Head|_],Var):-
+    Head == Var,!.
+var_in_espaco([_|Tail],Var):-
+    var_in_espaco(Tail,Var).
+
 %-------------------------------------------------------------------------------
 
 combinacoes_soma(N, Els, Soma, Combs):- % 3.1.1
@@ -73,7 +81,7 @@ espaco_fila([Head|Tail],Esp,H_V,Number,List):-
 espacos_fila(H_V, Fila, Espacos):- %3.1.4
     bagof(Esp,(espaco_fila(Fila,Esp,H_V)),Espacos).
 
-%-------------------------------------------------------------
+%-------------------------3.1.5--------------------------------
 
 espacos_puzzle(Puzzle,Espacos):-
     espacos_puzzle_aux(Puzzle,h,Res01),
@@ -84,6 +92,18 @@ espacos_puzzle(Puzzle,Espacos):-
 espacos_puzzle_aux(Puzzle,H_V,Res):- 
     bagof(Espaco,Fila^(member(Fila, Puzzle), espacos_fila(H_V, Fila, Espaco)), Res0),
     concat(Res0,Res).
+
+%--------------------------3.1.6----------------------------------
+espacos_com_posicoes_comuns(Espacos, Esp, Esps_com):-
+    !.
+
+
+
+
+
+
+
+
 
 
 
