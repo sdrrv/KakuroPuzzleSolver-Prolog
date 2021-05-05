@@ -34,6 +34,9 @@ var_in_espaco([Head|_],Var):-
 var_in_espaco([_|Tail],Var):-
     var_in_espaco(Tail,Var).
 
+is_same_espaco(espaco(_,Esp),List):-
+    Esp == List.
+
 %-------------------------------------------------------------------------------
 
 combinacoes_soma(N, Els, Soma, Combs):- % 3.1.1
@@ -94,8 +97,8 @@ espacos_puzzle_aux(Puzzle,H_V,Res):-
     concat(Res0,Res).
 
 %--------------------------3.1.6----------------------------------
-espacos_com_posicoes_comuns(Espacos, Esp, Esps_com):-
-    !.
+espacos_com_posicoes_comuns(Espacos, espaco(_,Esp), Esps_com):-
+    bagof(Espaco, Main^(member(Espaco, Espacos), member(Main, Esp), var_in_espaco(Espaco, Main), \+ is_same_espaco(Espaco,Esp) ), Esps_com).
 
 
 
