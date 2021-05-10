@@ -18,12 +18,11 @@ getBetween(Start,End,List,Res):-
     bagof(Member,Ele^(between(X,Y,Ele),nth0(Ele,List,Member)),Res).
 
 concat(List,Res):-
-    concat(List,Res0,[]),
-    reverse(Res0,Res).
+    concat(List,Res,[]).
 
 concat([],Res,Res).
 concat([Head|Tail],Res,Aux):-
-    append(Head,Aux,Y),
+    append(Aux,Head,Y),
     concat(Tail,Res,Y).
 
 var_in_espaco(espaco(_,Espacos),Var):-
