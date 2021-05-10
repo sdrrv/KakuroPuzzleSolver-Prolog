@@ -58,7 +58,6 @@ espaco_fila(Lista,Esp,H_V):-
     get_lenght_espaco(Esp,Length),
     Length \= 0.
     
-
 espaco_fila([],espaco(Number,List),_,Number,List):-
     nonvar(Number).
 
@@ -67,20 +66,12 @@ espaco_fila([ Head |_],espaco(Number,List),_,Number,List):-
     nonvar(Head).    
 
 espaco_fila([[_,H]|Tail],Esp,h,_,_):-
-    H \= 0,
+    nonvar(H),
     espaco_fila(Tail,Esp,h,H,[]).
 
 espaco_fila([[V,_]|Tail],Esp,v,_,_):-
-    V \= 0,
+    nonvar(V),
     espaco_fila(Tail,Esp,v,V,[]).
-
-espaco_fila([[_,H]|Tail],Esp,h,_,_):-
-    H==0,
-    espaco_fila(Tail,Esp,h,_,_).
-
-espaco_fila([[V,_]|Tail],Esp,v,_,_):-
-    V==0,
-    espaco_fila(Tail,Esp,v,_,_).
 
 espaco_fila([Head|Tail],Esp,H_V,Number,List):-
     var(Head),
