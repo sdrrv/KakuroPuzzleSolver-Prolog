@@ -55,7 +55,10 @@ permutacoes_soma(N, Els, Soma, Perms):- %3.1.2
 
 %-----------------------------------3.1.3----------------------------------------
 espaco_fila(Lista,Esp,H_V):-
-    espaco_fila(Lista,Esp,H_V,_,[]).
+    espaco_fila(Lista,Esp,H_V,_,[]),
+    get_lenght_espaco(Esp,Length),
+    Length \= 0.
+    
 
 espaco_fila([],espaco(Number,List),_,Number,List):-
     nonvar(Number).
@@ -119,6 +122,8 @@ permutacoes_soma_espacos([Head|Tail],Aux,Perms_soma):-
     append([[Head,X]],Aux,Y ),
     permutacoes_soma_espacos(Tail,Y,Perms_soma).
 permutacoes_soma_espacos([],Aux,Aux).
+
+%------------------------------------------------------------------
 
 
 
