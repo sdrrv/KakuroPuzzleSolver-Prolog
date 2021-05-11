@@ -80,7 +80,8 @@ espaco_fila([Head|Tail],Esp,H_V,Number,List):-
 %-------------------------------------------------------------
 
 espacos_fila(H_V, Fila, Espacos):- %3.1.4
-    bagof(Esp,(espaco_fila(Fila,Esp,H_V)),Espacos).
+    bagof(Esp,(espaco_fila(Fila,Esp,H_V)),Espacos),!.
+espacos_fila(_,_,[]).
 
 %-------------------------3.1.5--------------------------------
 
@@ -115,6 +116,7 @@ permutacoes_soma_espacos([],Aux,Aux).
 
 %------------------------------------------------------------------
 
+permutacao_possivel_espaco(Perm, Esp, Espacos, Perms_soma):-
 
 
 
