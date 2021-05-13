@@ -33,8 +33,6 @@ var_in_espaco([Head|_],Var):-
 var_in_espaco([_|Tail],Var):-
     var_in_espaco(Tail,Var).
 
-
-
 is_same_espaco(espaco(_,Esp),List):-
     Esp == List.
 
@@ -141,6 +139,15 @@ get_PermsSoma(Esp,Perms_soma,Res):- %Returns the Perms_soma of the given Espaco
 permutacao_possivel_espaco(Perm, Esp, Espacos, Perms_soma):-
     get_PermsSoma(Esp,Perms_soma,PermsS),
     get_list_espaco(Esp,List),
+    espacos_com_posicoes_comuns(Espacos, Esp, Esps_com).
+    permutacao_possivel_espaco_aux(List,PermsS,Esps_com,Perms_soma,Perm).
+
+permutacao_possivel_espaco_aux(EspList,EspPerms,Esps_com,Perms_soma,Perm):-
+    fail.
+
+permutacao_possivel_espaco_aux(EspList,[Head|Tail],Esps_com,Perm,Aux):-
+
+    
 
 
 
