@@ -33,6 +33,8 @@ var_in_espaco([Head|_],Var):-
 var_in_espaco([_|Tail],Var):-
     var_in_espaco(Tail,Var).
 
+
+
 is_same_espaco(espaco(_,Esp),List):-
     Esp == List.
 
@@ -43,6 +45,17 @@ get_soma_espaco(espaco(Soma,_),Soma).
 
 get_lenght_espaco(espaco(_,Lista), Lenght):-
     length(Lista, Lenght).
+
+get_list_espaco(espaco(_,List),List).
+
+find_var(Index,List,El):- % will return the index of a give var in a given list
+    find_var(Index,List,El,0).
+
+find_var(Aux,[Head|_],El,Aux):-
+    Head == El,!.
+find_var(Index,[_|Tail],El,Aux):-
+    Y is Aux + 1,
+    find_var(Index,Tail,El,Y).
 
 %-------------------------------------------------------------------------------
 
@@ -119,13 +132,17 @@ permutacoes_soma_espacos([],Aux,Aux).
 
 %------------------------------------------------------------------
 
-get_PermsSoma(Esp,Perms_soma,Res):-
-    member(Res,Perms_soma),
-    nth0(0,Res,Esp1),
-    is_same_espaco_V2(Esp,Esp1),!.
+get_PermsSoma(Esp,Perms_soma,Res):- %Returns the Perms_soma of the given Espaco
+    member(X,Perms_soma),
+    nth0(0,X,Esp1),
+    is_same_espaco_V2(Esp,Esp1),!,
+    nth0(1,X,Res).
 
 permutacao_possivel_espaco(Perm, Esp, Espacos, Perms_soma):-
-    fail.
+    get_PermsSoma(Esp,Perms_soma,PermsS),
+    get_list_espaco(Esp,List),
+
+
 
 
 
