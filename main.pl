@@ -36,6 +36,9 @@ var_in_espaco([_|Tail],Var):-
 is_same_espaco(espaco(_,Esp),List):-
     Esp == List.
 
+is_same_espaco_V2(espaco(_,Esp1),espaco(_,Esp2)):-
+    Esp1 == Esp2.
+
 get_soma_espaco(espaco(Soma,_),Soma).
 
 get_lenght_espaco(espaco(_,Lista), Lenght):-
@@ -116,8 +119,13 @@ permutacoes_soma_espacos([],Aux,Aux).
 
 %------------------------------------------------------------------
 
-permutacao_possivel_espaco(Perm, Esp, Espacos, Perms_soma):-
+get_PermsSoma(Esp,Perms_soma,Res):-
+    member(Res,Perms_soma),
+    nth0(0,Res,Esp1),
+    is_same_espaco_V2(Esp,Esp1),!.
 
+permutacao_possivel_espaco(Perm, Esp, Espacos, Perms_soma):-
+    fail.
 
 
 
