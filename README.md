@@ -1,7 +1,9 @@
-# Solucionador de Puzzles Kakuro
+# Kakuro Puzzle Solver PT-PT
 
-### Projeto para Logica de Programação (LP)
+### Project made for Logica de Programação (LP)
 
 # `Prolog`
 
-- Instituto Superiror Técnico (**Ist**)
+
+- ![alt text](https://cdn.discordapp.com/attachments/770390973766172692/842886301119283250/IST_Logo_V3.png "Ist")
+  Instituto Superiror Técnico (**Ist**) 

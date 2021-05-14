@@ -154,14 +154,14 @@ get_PermsSoma(Esp,Perms_soma,Res):- %Returns the Perms_soma of the given Espaco
     is_same_espaco_V2(Esp,Esp1),!,
     nth0(1,X,Res).
 
-permutacao_possivel_espaco(Perm, Esp, Espacos, Perms_soma):-
-    get_PermsSoma(Esp,Perms_soma,PermsS),
-    get_list_espaco(Esp,EspList),
-    espacos_com_posicoes_comuns(Espacos, Esp, Esps_com),
-    permutacao_possivel_espaco_aux(EspList,PermsS,Esps_com,Perms_soma,Perm).
+%permutacao_possivel_espaco(Perm, Esp, Espacos, Perms_soma):-
+   % get_PermsSoma(Esp,Perms_soma,PermsS),
+    %get_list_espaco(Esp,EspList),
+   % espacos_com_posicoes_comuns(Espacos, Esp, Esps_com),
+   % permutacao_possivel_espaco_aux(EspList,PermsS,Esps_com,Perms_soma,Perm).
 
-permutacao_possivel_espaco_aux(EspList,EspPerms,Esps_com,Perms_soma,Perm):-
-    fail.
+%permutacao_possivel_espaco_aux(EspList,EspPerms,Esps_com,Perms_soma,Perm):-
+    %fail.
 
 
 %--------------------------3.1.9----------------------------------
@@ -204,7 +204,7 @@ numeros_comuns(Lst_Perms, Numeros_comuns, AuxList, AuxNum, First):-
 
 numeros_comuns_aux(Lng1,Lng2,AuxNum,AuxList,Current,Res):-
     Lng1 == Lng2,!,
-    append([[AuxNum,Current]], AuxList, Res).
+    append([(AuxNum,Current)], AuxList, Res).
 
 numeros_comuns_aux(_,_,_,AuxList,_,AuxList).
 
@@ -255,3 +255,4 @@ inicializa(Puzzle, Perms_Possiveis):-
     simplifica(Perms_poss_esps, Perms_Possiveis).
 
 %------------------------------------------------------------------
+
