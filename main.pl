@@ -193,10 +193,21 @@ numeros_comuns_aux(_,_,_,AuxList,_,AuxList).
 
 %-------------------------3.1.12-----------------------------------
 
+atribui_comuns(Perms_Possiveis):-
+    member(Perm,Perms_Possiveis),
+    nth1(2,Perm,Lst_Perms),
+    numeros_comuns(Lst_Perms,Numeros_comuns),
+    atribui_comuns_aux(Numeros_comuns,Perm).
+    
+atribui_comuns_aux(Numeros_comuns,Perm):-
+    member(Com,Numeros_comuns),
+    nth1(1,Com,IndexCom),
+    nth1(2,Com,Replacer),
+    nth1(1,Perm,ListPerm),
+    nth1(IndexCom,ListPerm,Replacer).
 
 
-
-
+%-------------------------3.1.13-----------------------------------
 
 
 
