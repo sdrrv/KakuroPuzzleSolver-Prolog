@@ -9,13 +9,10 @@ lista_soma([Head|Tail],Sum):- %Returns the sum of all the elements in a given li
     lista_soma(Tail,M) , Sum is M + Head.
 lista_soma([],0).
 
+
 notmember(List,X):- %Returns True if X is not in the Lists.
     \+ member(X,List).
 
-getBetween(Start,End,List,Res):- 
-    X is Start + 1,
-    Y is End - 1,
-    bagof(Member,Ele^(between(X,Y,Ele),nth0(Ele,List,Member)),Res).
 
 concat(List,Res):-
     concat(List,Res,[]).
@@ -25,6 +22,7 @@ concat([Head|Tail],Res,Aux):-
     append(Aux,Head,Y),
     concat(Tail,Res,Y).
 
+
 var_in_espaco(espaco(_,Espacos),Var):-
     var_in_espaco(Espacos,Var).
 
@@ -33,18 +31,24 @@ var_in_espaco([Head|_],Var):-
 var_in_espaco([_|Tail],Var):-
     var_in_espaco(Tail,Var).
 
+
 is_same_espaco(espaco(_,Esp),List):-
     Esp == List.
+
 
 is_same_espaco_V2(espaco(_,Esp1),espaco(_,Esp2)):-
     Esp1 == Esp2.
 
+
 get_soma_espaco(espaco(Soma,_),Soma).
+
 
 get_lenght_espaco(espaco(_,Lista), Lenght):-
     length(Lista, Lenght).
 
+
 get_list_espaco(espaco(_,List),List).
+
 
 find_var(Index,List,El):- % will return the index of a give var in a given list
     find_var(Index,List,El,0).
@@ -54,6 +58,20 @@ find_var(Aux,[Head|_],El,Aux):-
 find_var(Index,[_|Tail],El,Aux):-
     Y is Aux + 1,
     find_var(Index,Tail,El,Y).
+
+
+unifica([],_):-
+    !.
+unifica(_,[]):-
+    !.
+
+unifica([Head1|Tail1], [_|Tail2]):-
+    var(Head1),!,
+    unifica(Tail1,Tail2).
+
+unifica([Head1|Tail1], [Head2|Tail2]):-
+    Head1 == Head2,!,
+    unifica(Tail1,Tail2).
 
 %-------------------------------------------------------------------------------
 
@@ -160,7 +178,6 @@ permutacoes_possiveis_espacos(Espacos, Perms_poss_esps):-
     bagof(Perms_poss, Esp^( member(Esp,Espacos),
     permutacoes_possivel_espaco(Espacos,Perms_soma,Esp,Perms_poss)), Perms_poss_esps ).
 
-
 %-------------------------3.1.11-----------------------------------
     
 numeros_comuns(Lst_Perms, Numeros_comuns):-
@@ -209,5 +226,16 @@ atribui_comuns_aux(Numeros_comuns,Perm):-
 
 %-------------------------3.1.13-----------------------------------
 
+retira_impossiveis(Perms_Possiveis, Novas_Perms_Possiveis):-
+    bagof(Res2,(
+    member(Perms,Perms_Possiveis),
+    nth0(0, Perms, PermsList),
+    nth0(1, Perms, WorkList),
+    retira_impossiveis_aux(PermsList,WorkList,Res),
+    append([PermsList],[Res], Res2)),Novas_Perms_Possiveis),!.
+
+retira_impossiveis_aux(PermsList,WorkList,Res):-
+    bagof(Possibility,(member(Possibility, WorkList),
+    unifica(PermsList,Possibility)),Res).
 
 
