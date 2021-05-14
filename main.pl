@@ -158,14 +158,40 @@ permutacoes_possiveis_espaco(Espacos, Perms_soma, Esp, Perms_poss):-
 permutacoes_possiveis_espacos(Espacos, Perms_poss_esps):-
     permutacoes_soma_espacos(Espacos, Perms_soma),
     bagof(Perms_poss, Esp^( member(Esp,Espacos),
-    permutacao_possivel_espaco(Espacos,Perms_soma,Esp,Perms_poss)), Perms_poss_esps ).
+    permutacoes_possivel_espaco(Espacos,Perms_soma,Esp,Perms_poss)), Perms_poss_esps ).
 
 
 %-------------------------3.1.11-----------------------------------
     
+numeros_comuns(Lst_Perms, Numeros_comuns):-
+    nth1(1,Lst_Perms,First),
+    numeros_comuns(Lst_Perms, Res0, [],1, First),
+    reverse(Res0,Numeros_comuns).
+    
 
+numeros_comuns(_, AuxList, AuxList, AuxNum,First):-
+    length(First,X),
+    AuxNum is X +1,!.
 
+numeros_comuns(Lst_Perms, Numeros_comuns, AuxList, AuxNum, First):-
+    nth1(AuxNum, First,Current),
+    findall(El,( member(X,Lst_Perms), 
+             nth1(AuxNum,X,El),
+             nth1(AuxNum, First,Current),
+             El == Current), Tmp),
+    length(Lst_Perms,Lng),
+    length(Tmp,Lng2),
+    numeros_comuns_aux(Lng,Lng2,AuxNum,AuxList,Current,Z),
+    Y is AuxNum + 1,
+    numeros_comuns(Lst_Perms, Numeros_comuns, Z, Y, First).
 
+numeros_comuns_aux(Lng1,Lng2,AuxNum,AuxList,Current,Res):-
+    Lng1 == Lng2,!,
+    append([[AuxNum,Current]], AuxList, Res).
+
+numeros_comuns_aux(_,_,_,AuxList,_,AuxList).
+
+%-------------------------3.1.12-----------------------------------
 
 
 
