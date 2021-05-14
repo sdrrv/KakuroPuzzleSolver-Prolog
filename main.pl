@@ -128,7 +128,7 @@ permutacoes_soma_espacos([Head|Tail],Aux,Perms_soma):-
     permutacoes_soma_espacos(Tail,Y,Perms_soma).
 permutacoes_soma_espacos([],Aux,Aux).
 
-%------------------------------------------------------------------
+%--------------------------3.1.8----------------------------------
 
 get_PermsSoma(Esp,Perms_soma,Res):- %Returns the Perms_soma of the given Espaco
     member(X,Perms_soma),
@@ -138,15 +138,30 @@ get_PermsSoma(Esp,Perms_soma,Res):- %Returns the Perms_soma of the given Espaco
 
 permutacao_possivel_espaco(Perm, Esp, Espacos, Perms_soma):-
     get_PermsSoma(Esp,Perms_soma,PermsS),
-    get_list_espaco(Esp,List),
+    get_list_espaco(Esp,EspList),
     espacos_com_posicoes_comuns(Espacos, Esp, Esps_com).
-    permutacao_possivel_espaco_aux(List,PermsS,Esps_com,Perms_soma,Perm).
+    permutacao_possivel_espaco_aux(EspList,PermsS,Esps_com,Perms_soma,Perm).
 
 permutacao_possivel_espaco_aux(EspList,EspPerms,Esps_com,Perms_soma,Perm):-
     fail.
 
-permutacao_possivel_espaco_aux(EspList,[Head|Tail],Esps_com,Perm,Aux):-
 
+%--------------------------3.1.9----------------------------------
+
+permutacoes_possiveis_espaco(Espacos, Perms_soma, Esp, Perms_poss):-
+    get_list_espaco(Esp,EspList),
+    permutacao_possivel_espaco(Perm,Esp,Espacos,Perms_soma),
+    append([EspList], Perm, Perms_poss).
+
+%--------------------------3.1.10---------------------------------
+
+permutacoes_possiveis_espacos(Espacos, Perms_poss_esps):-
+    permutacoes_soma_espacos(Espacos, Perms_soma),
+    bagof(Perms_poss, Esp^( member(Esp,Espacos),
+    permutacao_possivel_espaco(Espacos,Perms_soma,Esp,Perms_poss)), Perms_poss_esps ).
+
+
+%-------------------------3.1.11-----------------------------------
     
 
 
