@@ -157,7 +157,7 @@ get_PermsSoma(Esp,Perms_soma,Res):- %Returns the Perms_soma of the given Espaco
 permutacao_possivel_espaco(Perm, Esp, Espacos, Perms_soma):-
     get_PermsSoma(Esp,Perms_soma,PermsS),
     get_list_espaco(Esp,EspList),
-    espacos_com_posicoes_comuns(Espacos, Esp, Esps_com).
+    espacos_com_posicoes_comuns(Espacos, Esp, Esps_com),
     permutacao_possivel_espaco_aux(EspList,PermsS,Esps_com,Perms_soma,Perm).
 
 permutacao_possivel_espaco_aux(EspList,EspPerms,Esps_com,Perms_soma,Perm):-
@@ -241,4 +241,17 @@ retira_impossiveis_aux(PermsList,WorkList,Res):-
     bagof(Possibility,Possibility^(member(Possibility, WorkList),
     unifica(PermsList,Possibility)),Res).
 
+%-------------------------3.1.14-----------------------------------
 
+simplifica(Perms_Possiveis, Novas_Perms_Possiveis):-
+    atribui_comuns(Perms_Possiveis),
+    retira_impossiveis(Perms_Possiveis, Novas_Perms_Possiveis).
+
+%-------------------------3.1.15-----------------------------------
+
+inicializa(Puzzle, Perms_Possiveis):-
+    espacos_puzzle(Puzzle, Espacos),
+    permutacoes_possiveis_espacos(Espacos, Perms_poss_esps),
+    simplifica(Perms_poss_esps, Perms_Possiveis).
+
+%------------------------------------------------------------------
