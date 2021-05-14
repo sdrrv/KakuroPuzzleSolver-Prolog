@@ -227,15 +227,18 @@ atribui_comuns_aux(Numeros_comuns,Perm):-
 %-------------------------3.1.13-----------------------------------
 
 retira_impossiveis(Perms_Possiveis, Novas_Perms_Possiveis):-
-    bagof(Res2,(
+    bagof(Res2,(retira_impossiveis_bagof_unify(Perms_Possiveis, Res2))
+          ,Novas_Perms_Possiveis).
+
+retira_impossiveis_bagof_unify(Perms_Possiveis, Res2):-
     member(Perms,Perms_Possiveis),
     nth0(0, Perms, PermsList),
     nth0(1, Perms, WorkList),
     retira_impossiveis_aux(PermsList,WorkList,Res),
-    append([PermsList],[Res], Res2)),Novas_Perms_Possiveis),!.
+    append([PermsList],[Res], Res2).
 
 retira_impossiveis_aux(PermsList,WorkList,Res):-
-    bagof(Possibility,(member(Possibility, WorkList),
+    bagof(Possibility,Possibility^(member(Possibility, WorkList),
     unifica(PermsList,Possibility)),Res).
 
 
