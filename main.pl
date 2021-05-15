@@ -73,6 +73,9 @@ unifica([Head1|Tail1], [Head2|Tail2]):-
     Head1 == Head2,!,
     unifica(Tail1,Tail2).
 
+get_permPoss_length([_,PermPoss],Res):-
+    length(PermPoss,Res).
+
 %-------------------------------------------------------------------------------
 
 combinacoes_soma(N, Els, Soma, Combs):- % 3.1.1
@@ -257,3 +260,30 @@ inicializa(Puzzle, Perms_Possiveis):-
 
 %------------------------------------------------------------------
 
+escolhe_menos_alternativas(Perms_Possiveis, Escolha):-
+    escolhe_menos_alternativas(Perms_Possiveis, Escolha, 0, _).
+
+escolhe_menos_alternativas([],AuxEsp,_,AuxEsp):-
+    var(AuxEsp),fail,!; nonvar(AuxEsp),!.
+
+escolhe_menos_alternativas([Head|Tail], Escolha, AuxLength, AuxEsp):-
+    get_permPoss_length(Head,Len),
+    Len =< 1,!,
+    escolhe_menos_alternativas(Tail, Escolha, AuxLength, AuxEsp).
+
+escolhe_menos_alternativas([Head|Tail], Escolha, AuxLength, _):-
+    AuxLength == 0,
+    get_permPoss_length(Head,Len),
+    Len >= 1,!,
+    nth0(0,Head,Esp),
+    escolhe_menos_alternativas(Tail, Escolha, Len, Esp).
+
+escolhe_menos_alternativas([Head|Tail], Escolha, AuxLength, AuxEsp):-
+    get_permPoss_length(Head,Len),
+    Len >= AuxLength,!,
+    escolhe_menos_alternativas(Tail, Escolha, AuxLength, AuxEsp).
+
+escolhe_menos_alternativas([Head|Tail], Escolha, _, _):-
+    get_permPoss_length(Head,Len),
+    nth0(0,Head,Esp),
+    escolhe_menos_alternativas(Tail, Escolha, Len, Esp).
