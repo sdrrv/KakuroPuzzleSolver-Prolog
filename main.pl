@@ -258,7 +258,7 @@ inicializa(Puzzle, Perms_Possiveis):-
     permutacoes_possiveis_espacos(Espacos, Perms_poss_esps),
     simplifica(Perms_poss_esps, Perms_Possiveis).
 
-%------------------------------------------------------------------
+%------------------------------3.2.1-----------------------------------
 
 escolhe_menos_alternativas(Perms_Possiveis, Escolha):-
     escolhe_menos_alternativas(Perms_Possiveis, Escolha, 0, _).
@@ -275,8 +275,7 @@ escolhe_menos_alternativas([Head|Tail], Escolha, AuxLength, _):-
     AuxLength == 0,
     get_permPoss_length(Head,Len),
     Len >= 1,!,
-    nth0(0,Head,Esp),
-    escolhe_menos_alternativas(Tail, Escolha, Len, Esp).
+    escolhe_menos_alternativas(Tail, Escolha, Len, Head).
 
 escolhe_menos_alternativas([Head|Tail], Escolha, AuxLength, AuxEsp):-
     get_permPoss_length(Head,Len),
@@ -285,5 +284,4 @@ escolhe_menos_alternativas([Head|Tail], Escolha, AuxLength, AuxEsp):-
 
 escolhe_menos_alternativas([Head|Tail], Escolha, _, _):-
     get_permPoss_length(Head,Len),
-    nth0(0,Head,Esp),
-    escolhe_menos_alternativas(Tail, Escolha, Len, Esp).
+    escolhe_menos_alternativas(Tail, Escolha, Len, Head).
