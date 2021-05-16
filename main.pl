@@ -77,6 +77,16 @@ unifica([Head1|Tail1], [Head2|Tail2]):-
 get_permPoss_length([_,PermPoss],Res):-
     length(PermPoss,Res).
 
+
+unificar([],[]):-
+    !.
+unificar([Head1|Tail1], [Head2|Tail2]):-
+    var(Head1),!,
+    Head1 = Head2,
+    unificar(Tail1,Tail2).
+unificar([_|Tail1], [_|Tail2]):-
+    unificar(Tail1,Tail2).
+
 %-------------------------------------------------------------------------------
 
 combinacoes_soma(N, Els, Soma, Combs):- % 3.1.1
@@ -290,8 +300,22 @@ retira_impossiveis_aux(PermsList,WorkList,Res):-
 %-------------------------3.1.14-----------------------------------
 
 simplifica(Perms_Possiveis, Novas_Perms_Possiveis):-
+    simplifica_aux(Perms_Possiveis, Novas_Perms_Possiveis,_).
+
+    
+simplifica_aux(Perms_Possiveis, AuxBag, AuxBag):-
+    Perms_Possiveis == AuxBag,!.
+
+simplifica_aux(Perms_Possiveis, Novas_Perms_Possiveis,AuxBag):-
+    var(AuxBag),!,
     atribui_comuns(Perms_Possiveis),
-    retira_impossiveis(Perms_Possiveis, Novas_Perms_Possiveis).
+    retira_impossiveis(Perms_Possiveis, Novas_Perms_Possiveis_local),
+    simplifica_aux(Perms_Possiveis, Novas_Perms_Possiveis,Novas_Perms_Possiveis_local).
+
+simplifica_aux(_, Novas_Perms_Possiveis,AuxBag):-
+    atribui_comuns(AuxBag),
+    retira_impossiveis(AuxBag, Novas_Perms_Possiveis_local),
+    simplifica_aux(AuxBag, Novas_Perms_Possiveis,Novas_Perms_Possiveis_local).
 
 %-------------------------3.1.15-----------------------------------
 
@@ -327,3 +351,19 @@ escolhe_menos_alternativas([Head|Tail], Escolha, AuxLength, AuxEsp):-
 escolhe_menos_alternativas([Head|Tail], Escolha, _, _):-
     get_permPoss_length(Head,Len),
     escolhe_menos_alternativas(Tail, Escolha, Len, Head).
+
+%---------------------------------------3.1.2--------------------------------------
+
+replace_permPoss(Perms_Possiveis,Perm,Replacement,Res):-
+    maplist(replace_permPoss_aux(Perm,Replacement),Perms_Possiveis,Res).
+
+replace_permPoss_aux(Perm,Replacement,El,Replacement):-
+    Perm == El,!.
+
+replace_permPoss_aux(_,_,El,El).
+
+experimenta_perm([Esp,Lst_Perms], Perms_Possiveis,Novas_Perms_Possiveis):-
+    member(Perm,Lst_Perms),
+    unificar(Esp,Perm),
+    append([Esp],[[Perm]],El),
+    replace_permPoss(Perms_Possiveis,[Esp,Lst_Perms],El,Novas_Perms_Possiveis).
