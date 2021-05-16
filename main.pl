@@ -50,7 +50,7 @@ get_lenght_espaco(espaco(_,Lista), Lenght):-
 get_list_espaco(espaco(_,List),List).
 
 
-find_var(Index,List,El):- % will return the index of a give var in a given list
+find_var(Index,List,El):- % will return the index of a given var in a given list
     find_var(Index,List,El,0).
 
 find_var(Aux,[Head|_],El,Aux):-
@@ -157,13 +157,31 @@ get_PermsSoma(Esp,Perms_soma,Res):- %Returns the Perms_soma of the given Espaco
     is_same_espaco_V2(Esp,Esp1),!,
     nth0(1,X,Res).
 
-%permutacao_possivel_espaco(Perm, Esp, Espacos, Perms_soma):-
+
+exists_at_least_one(Index,El,Lists):-
+    bagof(List,List^(member(List,Lists),
+                        nth1(Index,List,ElList),
+                        ElList == El,!), Res01),
+    length(Res01,Len),
+    Len >= 1.
+
+
+divide_espacos_com_posicoes_comuns(EspList,Esps_com,Res):-
+    bagof(List,Space^(member(Space,EspList),
+                   divide_espacos_com_posicoes_comuns_aux(Space,Esps_com,List)),Res).
+
+divide_espacos_com_posicoes_comuns_aux(Space,Esps_com,Res):-
+    bagof(Espaco,ListEsp^(member(Espaco,Esps_com), get_list_espaco(Espaco,ListEsp),
+                   find_var(_,ListEsp,Space)),Res).
+
+
+permutacao_possivel_espaco(Perm, Esp, Espacos, Perms_soma):-
    % get_PermsSoma(Esp,Perms_soma,PermsS),
     %get_list_espaco(Esp,EspList),
    % espacos_com_posicoes_comuns(Espacos, Esp, Esps_com),
    % permutacao_possivel_espaco_aux(EspList,PermsS,Esps_com,Perms_soma,Perm).
 
-%permutacao_possivel_espaco_aux(EspList,EspPerms,Esps_com,Perms_soma,Perm):-
+permutacao_possivel_espaco_aux(EspList,EspPerms,Esps_com,Perms_soma,Perm):-
     %fail.
 
 
