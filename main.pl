@@ -369,7 +369,7 @@ experimenta_perm([Esp,Lst_Perms], Perms_Possiveis,Novas_Perms_Possiveis):-
     replace_permPoss(Perms_Possiveis,[Esp,Lst_Perms],El,Novas_Perms_Possiveis).
 
 %--------------------------------------------------------------------------------------
-%
+
 resolve_aux(Perms_Possiveis, Novas_Perms_Possiveis):-
     length(Perms_Possiveis,Len),
     resolve_aux(Perms_Possiveis, Novas_Perms_Possiveis,Len).
@@ -384,3 +384,9 @@ resolve_aux(Perms_Possiveis, Perms_Possiveis,Len):-
     length(Perms_Possiveis,ResLen),
     ResLen == Len,
     !.
+
+%--------------------------------------------------------------------------------------
+
+resolve(Puz):-
+    inicializa(Puz, Perms_Possiveis),
+    resolve_aux(Perms_Possiveis, _).
