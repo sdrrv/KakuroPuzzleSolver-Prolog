@@ -367,3 +367,17 @@ experimenta_perm([Esp,Lst_Perms], Perms_Possiveis,Novas_Perms_Possiveis):-
     unificar(Esp,Perm),
     append([Esp],[[Perm]],El),
     replace_permPoss(Perms_Possiveis,[Esp,Lst_Perms],El,Novas_Perms_Possiveis).
+
+%--------------------------------------------------------------------------------------
+
+resolve_aux(Perms_Possiveis, Novas_Perms_Possiveis):-
+    resolve_aux2(Perms_Possiveis, Novas_Perms_Possiveis).
+    
+resolve_aux2(Perms_Possiveis, Novas_Perms_Possiveis):-
+    escolhe_menos_alternativas(Perms_Possiveis, Escolha),!,
+	experimenta_perm(Escolha, Perms_Possiveis, Res01),
+    simplifica(Res01,Res02),
+    resolve_aux2(Res02, Novas_Perms_Possiveis).
+    
+resolve_aux2(Perms_Possiveis, Perms_Possiveis):-
+    !.
