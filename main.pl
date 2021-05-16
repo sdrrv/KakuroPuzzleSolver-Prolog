@@ -1,5 +1,5 @@
 :- [codigo_comum].
-:- [puzzles_publicos].
+%:- [puzzles_publicos].
 %--------------Help-Commands-------------------
 load:-
     [main].
