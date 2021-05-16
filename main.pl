@@ -51,7 +51,7 @@ get_list_espaco(espaco(_,List),List).
 
 
 find_var(Index,List,El):- % will return the index of a given var in a given list
-    find_var(Index,List,El,0).
+    find_var(Index,List,El,1).
 
 find_var(Aux,[Head|_],El,Aux):-
     Head == El,!.
@@ -171,18 +171,44 @@ divide_espacos_com_posicoes_comuns(EspList,Esps_com,Res):-
                    divide_espacos_com_posicoes_comuns_aux(Space,Esps_com,List)),Res).
 
 divide_espacos_com_posicoes_comuns_aux(Space,Esps_com,Res):-
-    bagof(Espaco,ListEsp^(member(Espaco,Esps_com), get_list_espaco(Espaco,ListEsp),
-                   find_var(_,ListEsp,Space)),Res).
-
+    bagof([Index,Espaco],ListEsp^(member(Espaco,Esps_com), get_list_espaco(Espaco,ListEsp),
+                   find_var(Index,ListEsp,Space)),Res).
 
 permutacao_possivel_espaco(Perm, Esp, Espacos, Perms_soma):-
-   % get_PermsSoma(Esp,Perms_soma,PermsS),
-    %get_list_espaco(Esp,EspList),
-   % espacos_com_posicoes_comuns(Espacos, Esp, Esps_com),
-   % permutacao_possivel_espaco_aux(EspList,PermsS,Esps_com,Perms_soma,Perm).
+   get_PermsSoma(Esp,Perms_soma,PermsS),
+   get_list_espaco(Esp,EspList),
+   espacos_com_posicoes_comuns(Espacos, Esp, Esps_com),
+   divide_espacos_com_posicoes_comuns(EspList,Esps_com,Esps_com_divided),
+   permutacao_possivel_espaco_aux(PermsS,Esps_com_divided,Perms_soma,Res01),
+   member(Perm,Res01).
 
-permutacao_possivel_espaco_aux(EspList,EspPerms,Esps_com,Perms_soma,Perm):-
-    %fail.
+permutacao_possivel_espaco_aux(PermsS,Esps_com_divided,Perms_soma,Perm):-
+    bagof(EspPerm,EspPerm^(member(EspPerm,PermsS),
+    	permutacao_possivel_espaco_single(Esps_com_divided,EspPerm,Perms_soma)),
+        Perm).
+    
+    
+
+permutacao_possivel_espaco_single(Esps_com_divided,EspPerm,Perms_soma):-
+    length(EspPerm,Len),
+    findall(Index,(
+    between(1,Len,Index),
+    nth1(Index,EspPerm,Value),
+    nth1(Index,Esps_com_divided,Esps_com),
+    permutacao_possivel_espaco_single_single(Value,Esps_com,Perms_soma)),Res01),
+    length(Res01,Res01_len),
+    Len == Res01_len.
+
+permutacao_possivel_espaco_single_single(Value,Esps_com,Perms_soma):-
+    
+    bagof(Esp_com,(member(Esp_com_Matrix, Esps_com),nth1(2,Esp_com_Matrix,Esp_com),
+                               nth1(1,Esp_com_Matrix,Esp_com_Index),
+                               get_PermsSoma(Esp_com,Perms_soma,Esp_com_Perms),
+                               exists_at_least_one(Esp_com_Index,Value,Esp_com_Perms)),Esps_com_checked),
+    
+    length(Esps_com,Eps_com_len),
+    length(Esps_com_checked,Esps_com_checked_len),
+    Eps_com_len == Esps_com_checked_len, true.
 
 
 %--------------------------3.1.9----------------------------------
