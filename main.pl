@@ -221,8 +221,7 @@ permutacoes_possiveis_espaco(Espacos, Perms_soma, Esp, Perms_poss):-
 
 permutacoes_possiveis_espacos(Espacos, Perms_poss_esps):-
     permutacoes_soma_espacos(Espacos, Perms_soma),
-    bagof(Perms_poss, Esp^( member(Esp,Espacos),
-    permutacoes_possivel_espaco(Espacos,Perms_soma,Esp,Perms_poss)), Perms_poss_esps ).
+    bagof(Perms_poss,Esp^( member(Esp,Espacos), permutacoes_possiveis_espaco(Espacos, Perms_soma, Esp, Perms_poss)),Perms_poss_esps).
 
 %-------------------------3.1.11-----------------------------------
     
