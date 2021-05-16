@@ -1,4 +1,5 @@
 :- [codigo_comum].
+:- [puzzles_publicos].
 %--------------Help-Commands-------------------
 load:-
     [main].
@@ -212,8 +213,9 @@ permutacao_possivel_espaco_single_single(Value,Esps_com,Perms_soma):-
 
 permutacoes_possiveis_espaco(Espacos, Perms_soma, Esp, Perms_poss):-
     get_list_espaco(Esp,EspList),
-    permutacao_possivel_espaco(Perm,Esp,Espacos,Perms_soma),
-    append([EspList], Perm, Perms_poss).
+    findall(Perm,(
+    permutacao_possivel_espaco(Perm,Esp,Espacos,Perms_soma)),Perms),
+    append([EspList], [Perms], Perms_poss).
 
 %--------------------------3.1.10---------------------------------
 
