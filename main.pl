@@ -174,19 +174,16 @@ divide_espacos_com_posicoes_comuns_aux(Space,Esps_com,Res):-
     bagof([Index,Espaco],ListEsp^(member(Espaco,Esps_com), get_list_espaco(Espaco,ListEsp),
                    find_var(Index,ListEsp,Space)),Res).
 
-permutacao_possivel_espaco(Perm, Esp, Espacos, Perms_soma):-
+ permutacao_possivel_espaco(Perm, Esp, Espacos, Perms_soma):-
    get_PermsSoma(Esp,Perms_soma,PermsS),
    get_list_espaco(Esp,EspList),
    espacos_com_posicoes_comuns(Espacos, Esp, Esps_com),
    divide_espacos_com_posicoes_comuns(EspList,Esps_com,Esps_com_divided),
-   permutacao_possivel_espaco_aux(PermsS,Esps_com_divided,Perms_soma,Res01),
-   member(Perm,Res01).
+   permutacao_possivel_espaco_aux(PermsS,Esps_com_divided,Perms_soma,Perm).
 
 permutacao_possivel_espaco_aux(PermsS,Esps_com_divided,Perms_soma,Perm):-
-    bagof(EspPerm,EspPerm^(member(EspPerm,PermsS),
-    	permutacao_possivel_espaco_single(Esps_com_divided,EspPerm,Perms_soma)),
-        Perm).
-    
+    member(Perm,PermsS),
+    permutacao_possivel_espaco_single(Esps_com_divided,Perm,Perms_soma).   
     
 
 permutacao_possivel_espaco_single(Esps_com_divided,EspPerm,Perms_soma):-
