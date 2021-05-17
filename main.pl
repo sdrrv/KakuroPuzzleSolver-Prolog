@@ -159,19 +159,20 @@ espacos_fila(_,_,[]).% Condicao de saida
 
 %-------------------------3.1.5--------------------------------
 
-espacos_puzzle(Puzzle,Espacos):-
+espacos_puzzle(Puzzle,Espacos):-% Devolve uma Lista Espacos, com todos os espacos possiveis.
     espacos_puzzle_aux(Puzzle,h,Res01),
     mat_transposta(Puzzle, Trans),
     espacos_puzzle_aux(Trans,v,Res02),
     append(Res01, Res02, Espacos).
 
-espacos_puzzle_aux(Puzzle,H_V,Res):- 
-    bagof(Espaco,Fila^(member(Fila, Puzzle), espacos_fila(H_V, Fila, Espaco)), Res0),
+espacos_puzzle_aux(Puzzle,H_V,Res):-% Devolve para a funcao principal todos os espacos de uma determinada orientacao. 
+    bagof(Espaco,Fila^(member(Fila, Puzzle), 
+        espacos_fila(H_V, Fila, Espaco)), Res0),
     concat(Res0,Res).
 
 %--------------------------3.1.6----------------------------------
 
-espacos_com_posicoes_comuns(Espacos, espaco(_,Esp), Esps_com):-
+espacos_com_posicoes_comuns(Espacos, espaco(_,Esp), Esps_com):- % Devolve uma Lista com todos os espacos com posicoes comuns as posicoes do espaco dadp
     bagof(Espaco, Main^(member(Espaco, Espacos), 
         member(Main, Esp), 
         var_in_espaco(Espaco, Main), 
@@ -179,17 +180,17 @@ espacos_com_posicoes_comuns(Espacos, espaco(_,Esp), Esps_com):-
 
 %--------------------------3.1.7----------------------------------
 
-permutacoes_soma_espacos(Espacos, Perms_soma):-
+permutacoes_soma_espacos(Espacos, Perms_soma):- % Devolve uma lita com as perutacoes possiveis para cada espaco do puzzle
     reverse(Espacos,X),
     permutacoes_soma_espacos(X,[],Perms_soma).
 
-permutacoes_soma_espacos([Head|Tail],Aux,Perms_soma):-
+permutacoes_soma_espacos([Head|Tail],Aux,Perms_soma):% Recursao
     get_soma_espaco(Head,Sum),
     get_lenght_espaco(Head,Lenght),
     permutacoes_soma(Lenght,[1,2,3,4,5,6,7,8,9],Sum,X),
     append([[Head,X]],Aux,Y ),
     permutacoes_soma_espacos(Tail,Y,Perms_soma).
-permutacoes_soma_espacos([],Aux,Aux).
+permutacoes_soma_espacos([],Aux,Aux).%Condicao de saida
 
 %--------------------------3.1.8----------------------------------
 
