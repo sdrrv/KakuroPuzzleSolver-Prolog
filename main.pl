@@ -1,133 +1,161 @@
+/*
+---------------------------------------------------------------------------
+        
+                            Logica de Programacao
+                                Duarte Elvas
+                                   198564
+                                     TG
+
+----------------------------------------------------------------------------
+*/
 :- [codigo_comum].
 %:- [puzzles_publicos].
-%--------------Help-Commands-------------------
-load:-
+/*--------------Help-Commands-------------------
+    Criados para ajudar no debug do codigo     */
+
+    load:-  
     [main].
 exit:-
     halt.
+
 %---------------Aux-Commands-------------------
-lista_soma([Head|Tail],Sum):- %Returns the sum of all the elements in a given list.
+lista_soma([Head|Tail],Sum):- %Devolve a soma de todos os elementos numa dada lista
     lista_soma(Tail,M) , Sum is M + Head.
 lista_soma([],0).
 
 
-notmember(List,X):- %Returns True if X is not in the Lists.
+notmember(List,X):- %E verdadeiro se o X nao estiver na Lista "List"
     \+ member(X,List).
 
 
-concat(List,Res):-
+concat(List,Res):-% Se existir agulguma lista [[1]], ele vai retirar a lita de dentro deixando [1].
     concat(List,Res,[]).
 
-concat([],Res,Res).
-concat([Head|Tail],Res,Aux):-
+concat([],Res,Res). %Condicao de saida
+concat([Head|Tail],Res,Aux):- %Loop recursivo
     append(Aux,Head,Y),
     concat(Tail,Res,Y).
 
 
-var_in_espaco(espaco(_,Espacos),Var):-
+var_in_espaco(espaco(_,Espacos),Var):-% Vai verificar se a Variavel dada esta contida na lista do espaco dado
     var_in_espaco(Espacos,Var).
 
-var_in_espaco([Head|_],Var):-
+var_in_espaco([Head|_],Var):-% Condicao de saida
     Head == Var,!.
-var_in_espaco([_|Tail],Var):-
+var_in_espaco([_|Tail],Var):-% Loop Recursivo
     var_in_espaco(Tail,Var).
 
 
-is_same_espaco(espaco(_,Esp),List):-
+is_same_espaco(espaco(_,Esp),List):-% Verifica se a Lista dada e a mesma lista do espaco dado.
     Esp == List.
 
 
-is_same_espaco_V2(espaco(_,Esp1),espaco(_,Esp2)):-
+is_same_espaco_V2(espaco(_,Esp1),espaco(_,Esp2)):-% Verifica se dois espacos sao iguais, ou seja, os mesmos.
     Esp1 == Esp2.
 
 
-get_soma_espaco(espaco(Soma,_),Soma).
+get_soma_espaco(espaco(Soma,_),Soma).% Devolve o valor da Soma de um dado espaco.
 
 
-get_lenght_espaco(espaco(_,Lista), Lenght):-
+get_lenght_espaco(espaco(_,Lista), Lenght):-% Devolve o tamanho da lista de variaveis de um dado espaco.
     length(Lista, Lenght).
 
 
-get_list_espaco(espaco(_,List),List).
+get_list_espaco(espaco(_,List),List).% Devolve a lista de variaveis de um determinado espaco
 
 
-find_var(Index,List,El):- % will return the index of a given var in a given list
+find_var(Index,List,El):- % Vai devolver o index da Variavel dada, na Lista dada: [X,Y],X -> 1.
     find_var(Index,List,El,1).
 
-find_var(Aux,[Head|_],El,Aux):-
+find_var(Aux,[Head|_],El,Aux):-% Condicao de saida
     Head == El,!.
-find_var(Index,[_|Tail],El,Aux):-
+find_var(Index,[_|Tail],El,Aux):-% Loop recursivo
     Y is Aux + 1,
     find_var(Index,Tail,El,Y).
 
 
-unifica([],_):-
+% O predicado Unifica vai verificar que duas listas sao unificaveis
+unifica([],_):-% Condicao de saida
     !.
-unifica(_,[]):-
+unifica(_,[]):-% Condicao de Saida
     !.
 
-unifica([Head1|Tail1], [_|Tail2]):-
+unifica([Head1|Tail1], [_|Tail2]):-% Loop recursivo
     var(Head1),!,
     unifica(Tail1,Tail2).
 
-unifica([Head1|Tail1], [Head2|Tail2]):-
+unifica([Head1|Tail1], [Head2|Tail2]):-% Loop recursivo
     Head1 == Head2,!,
     unifica(Tail1,Tail2).
 
-get_permPoss_length([_,PermPoss],Res):-
+
+get_permPoss_length([_,PermPoss],Res):-% Vai devolver o tamanho da Lista de Permotacoes possiveis de um dado espaco
     length(PermPoss,Res).
 
-
-unificar([],[]):-
+%O predicado Unificar, vai unificar as duas listas dadas
+unificar([],[]):-% Condicao de Saida
     !.
-unificar([Head1|Tail1], [Head2|Tail2]):-
+unificar([Head1|Tail1], [Head2|Tail2]):-% Loop recursivo se a Head vor variavel
     var(Head1),!,
     Head1 = Head2,
     unificar(Tail1,Tail2).
-unificar([_|Tail1], [_|Tail2]):-
+unificar([_|Tail1], [_|Tail2]):- % Loop recursivo
     unificar(Tail1,Tail2).
 
-%-------------------------------------------------------------------------------
+/*
+------------------------------------------------------------------------------------
+                      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!                  
+                      !Aqui Comecam os Predicados Avaliados!
+                      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+------------------------------------------------------------------------------------
+*/
 
-combinacoes_soma(N, Els, Soma, Combs):- % 3.1.1
-     findall(Res, (combinacao(N, Els, Res), lista_soma(Res,Sum), Soma == Sum), Combs ).
+%------------------------------------3.1.1------------------------------------------
 
-%-------------------------------------------------------------------------------
+combinacoes_soma(N, Els, Soma, Combs):- % Var decolver uma lista com todas as combinacoes em que a soma dos seus membros vai ser igual a "Soma"
+     findall(Res, (combinacao(N, Els, Res),
+        lista_soma(Res,Sum),
+        Soma == Sum), Combs ).
 
-permutacoes_soma(N, Els, Soma, Perms):- %3.1.2
-     findall(Res1, (combinacao(N, Els, Res), lista_soma(Res,Sum), Soma == Sum, permutation(Res,Res1) ), Res2 ),
+%------------------------------------3.1.2------------------------------------------
+
+permutacoes_soma(N, Els, Soma, Perms):- % Vai devolver uma lista com todas as permutacoes em que a soma dos seus membros vai ser igual a "Soma".
+     findall(Res1, (combinacao(N, Els, Res),
+        lista_soma(Res,Sum),
+        Soma == Sum,
+        permutation(Res,Res1) ), Res2 ),
      sort(Res2,Perms).
 
 %-----------------------------------3.1.3----------------------------------------
-espaco_fila(Lista,Esp,H_V):-
+espaco_fila(Lista,Esp,H_V):- % Vai devolver os espacos(estrutura) numa dada fila (Linha ou Coluna).
     espaco_fila(Lista,Esp,H_V,_,[]),
     get_lenght_espaco(Esp,Length),
     Length \= 0.
     
-espaco_fila([],espaco(Number,List),_,Number,List):-
+espaco_fila([],espaco(Number,List),_,Number,List):- % Condicao de saida
     nonvar(Number).
 
-espaco_fila([ Head |_],espaco(Number,List),_,Number,List):-
+espaco_fila([ Head |_],espaco(Number,List),_,Number,List):-% Condicao de Saida
     nonvar(Number),
     nonvar(Head).    
 
-espaco_fila([[_,H]|Tail],Esp,h,_,_):-
+espaco_fila([[_,H]|Tail],Esp,h,_,_):-% Recursao se for horizontal
     nonvar(H),
     espaco_fila(Tail,Esp,h,H,[]).
 
-espaco_fila([[V,_]|Tail],Esp,v,_,_):-
+espaco_fila([[V,_]|Tail],Esp,v,_,_):-% Recursao de for vertical
     nonvar(V),
     espaco_fila(Tail,Esp,v,V,[]).
 
-espaco_fila([Head|Tail],Esp,H_V,Number,List):-
+espaco_fila([Head|Tail],Esp,H_V,Number,List):-% Recursao
     var(Head),
     append(List,[Head],Y),
     espaco_fila(Tail,Esp,H_V,Number,Y).
-%-------------------------------------------------------------
+%--------------------------3.1.4------------------------------
 
-espacos_fila(H_V, Fila, Espacos):- %3.1.4
+espacos_fila(H_V, Fila, Espacos):- % Junta todos os espacos de uma determinada fila numa lista.
     bagof(Esp,(espaco_fila(Fila,Esp,H_V)),Espacos),!.
-espacos_fila(_,_,[]).
+espacos_fila(_,_,[]).% Condicao de saida
 
 %-------------------------3.1.5--------------------------------
 
