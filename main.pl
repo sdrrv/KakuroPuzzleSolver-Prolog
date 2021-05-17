@@ -157,7 +157,7 @@ permutacoes_soma_espacos(Espacos, Perms_soma):-
 
 permutacoes_soma_espacos([Head|Tail],Aux,Perms_soma):-
     get_soma_espaco(Head,Sum),
-    get_lenght_espaco(Head,enght),
+    get_lenght_espaco(Head,Lenght),
     permutacoes_soma(Lenght,[1,2,3,4,5,6,7,8,9],Sum,X),
     append([[Head,X]],Aux,Y ),
     permutacoes_soma_espacos(Tail,Y,Perms_soma).
@@ -393,4 +393,3 @@ resolve_aux(Perms_Possiveis, Perms_Possiveis,Len):-
 resolve(Puz):-
     inicializa(Puz, Perms_Possiveis),
     resolve_aux(Perms_Possiveis, _).
-L
