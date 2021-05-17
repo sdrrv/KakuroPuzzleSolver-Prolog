@@ -19,6 +19,12 @@ exit:-
     halt.
 
 %---------------Aux-Commands-------------------
+/*
+
+        Comandos Auxiliares que auxiliam os predicados principais
+
+*/
+
 lista_soma([Head|Tail],Sum):- %Devolve a soma de todos os elementos numa dada lista
     lista_soma(Tail,M) , Sum is M + Head.
 lista_soma([],0).
@@ -201,7 +207,7 @@ get_PermsSoma(Esp,Perms_soma,Res):- %Returns the Perms_soma of the given Espaco
     nth0(1,X,Res).
 
 
-exists_at_least_one(Index,El,Lists):-
+exists_at_least_one(Index,El,Lists):-% Verifica na lista dada, se existe pelo menos uma lista que tenha no Index "Index" o El. 
     bagof(List,ElList^(member(List,Lists),
                         nth1(Index,List,ElList),
                         ElList == El,!), Res01),
@@ -209,37 +215,37 @@ exists_at_least_one(Index,El,Lists):-
     Len >= 1.
 
 
-divide_espacos_com_posicoes_comuns(EspList,Esps_com,Res):-
+divide_espacos_com_posicoes_comuns(EspList,Esps_com,Res):-%Divide numa lista os espacos comuns referentes a cada variavel do espaco dado
     bagof(List,Space^(member(Space,EspList),
                    divide_espacos_com_posicoes_comuns_aux(Space,Esps_com,List)),Res).
 
-divide_espacos_com_posicoes_comuns_aux(Space,Esps_com,Res):-
+divide_espacos_com_posicoes_comuns_aux(Space,Esps_com,Res):-%Cria a sublista com cada espaco
     bagof([Index,Espaco],ListEsp^(member(Espaco,Esps_com), get_list_espaco(Espaco,ListEsp),
                    find_var(Index,ListEsp,Space)),Res).
 
- permutacao_possivel_espaco(Perm, Esp, Espacos, Perms_soma):-
+ permutacao_possivel_espaco(Perm, Esp, Espacos, Perms_soma):-% Devolve a permutacao possivel para cada espaco
    get_PermsSoma(Esp,Perms_soma,PermsS),
    get_list_espaco(Esp,EspList),
    espacos_com_posicoes_comuns(Espacos, Esp, Esps_com),
    divide_espacos_com_posicoes_comuns(EspList,Esps_com,Esps_com_divided),
    permutacao_possivel_espaco_aux(PermsS,Esps_com_divided,Perms_soma,Perm).
 
-permutacao_possivel_espaco_aux(PermsS,Esps_com_divided,Perms_soma,Perm):-
+permutacao_possivel_espaco_aux(PermsS,Esps_com_divided,Perms_soma,Perm):-% Verifica todas as pemutacoes
     member(Perm,PermsS),
     permutacao_possivel_espaco_single(Esps_com_divided,Perm,Perms_soma).   
     
 
-permutacao_possivel_espaco_single(Esps_com_divided,EspPerm,Perms_soma):-
+permutacao_possivel_espaco_single(Esps_com_divided,EspPerm,Perms_soma):-%Verifica permutacao a permutacao
     length(EspPerm,Len),
     findall(Index,(
-    between(1,Len,Index),
-    nth1(Index,EspPerm,Value),
-    nth1(Index,Esps_com_divided,Esps_com),
-    permutacao_possivel_espaco_single_single(Value,Esps_com,Perms_soma)),Res01),
+        between(1,Len,Index),
+        nth1(Index,EspPerm,Value),
+        nth1(Index,Esps_com_divided,Esps_com),
+        permutacao_possivel_espaco_single_single(Value,Esps_com,Perms_soma)),Res01),
     length(Res01,Res01_len),
     Len == Res01_len.
 
-permutacao_possivel_espaco_single_single(Value,Esps_com,Perms_soma):-
+permutacao_possivel_espaco_single_single(Value,Esps_com,Perms_soma):-%Verifica posicao a posicao
     
     bagof(Esp_com,(member(Esp_com_Matrix, Esps_com),nth1(2,Esp_com_Matrix,Esp_com),
                                nth1(1,Esp_com_Matrix,Esp_com_Index),
@@ -253,31 +259,32 @@ permutacao_possivel_espaco_single_single(Value,Esps_com,Perms_soma):-
 
 %--------------------------3.1.9----------------------------------
 
-permutacoes_possiveis_espaco(Espacos, Perms_soma, Esp, Perms_poss):-
+permutacoes_possiveis_espaco(Espacos, Perms_soma, Esp, Perms_poss):-%Devolve o espaco com todas as suas permutacoes possiveis
     get_list_espaco(Esp,EspList),
     findall(Perm,(
-    permutacao_possivel_espaco(Perm,Esp,Espacos,Perms_soma)),Perms),
-    append([EspList], [Perms], Perms_poss).
+        permutacao_possivel_espaco(Perm,Esp,Espacos,Perms_soma)),Perms),
+        append([EspList], [Perms], Perms_poss).
 
 %--------------------------3.1.10---------------------------------
 
-permutacoes_possiveis_espacos(Espacos, Perms_poss_esps):-
+permutacoes_possiveis_espacos(Espacos, Perms_poss_esps):-%Devolve uma lista com todos os espacos e as suas respetivas permutacoes possiveis
     permutacoes_soma_espacos(Espacos, Perms_soma),
-    bagof(Perms_poss,Esp^( member(Esp,Espacos), permutacoes_possiveis_espaco(Espacos, Perms_soma, Esp, Perms_poss)),Perms_poss_esps).
+    bagof(Perms_poss,Esp^( member(Esp,Espacos), 
+        permutacoes_possiveis_espaco(Espacos, Perms_soma, Esp, Perms_poss)),Perms_poss_esps).
 
 %-------------------------3.1.11-----------------------------------
     
-numeros_comuns(Lst_Perms, Numeros_comuns):-
+numeros_comuns(Lst_Perms, Numeros_comuns):- % devolve uma estrutura com o indice e o inteiro comuns a todas as listas da lista
     nth1(1,Lst_Perms,First),
     numeros_comuns(Lst_Perms, Res0, [],1, First),
     reverse(Res0,Numeros_comuns).
     
 
-numeros_comuns(_, AuxList, AuxList, AuxNum,First):-
+numeros_comuns(_, AuxList, AuxList, AuxNum,First):- %condicao de saida
     length(First,X),
     AuxNum is X +1,!.
 
-numeros_comuns(Lst_Perms, Numeros_comuns, AuxList, AuxNum, First):-
+numeros_comuns(Lst_Perms, Numeros_comuns, AuxList, AuxNum, First):- % loop Recursivo
     nth1(AuxNum, First,Current),
     findall(El,( member(X,Lst_Perms), 
              nth1(AuxNum,X,El),
@@ -289,104 +296,104 @@ numeros_comuns(Lst_Perms, Numeros_comuns, AuxList, AuxNum, First):-
     Y is AuxNum + 1,
     numeros_comuns(Lst_Perms, Numeros_comuns, Z, Y, First).
 
-numeros_comuns_aux(Lng1,Lng2,AuxNum,AuxList,Current,Res):-
+numeros_comuns_aux(Lng1,Lng2,AuxNum,AuxList,Current,Res):- % Prepara o output
     Lng1 == Lng2,!,
     append([(AuxNum,Current)], AuxList, Res).
 
-numeros_comuns_aux(_,_,_,AuxList,_,AuxList).
+numeros_comuns_aux(_,_,_,AuxList,_,AuxList).%condicao de saida
 
 %-------------------------3.1.12-----------------------------------
 
-atribui_comuns([]):-
+atribui_comuns([]):- %Atribui os numeros comuns ao espaco
     !.
-atribui_comuns([Head|Tail]):-
+atribui_comuns([Head|Tail]):- %Loop Recursivo
     nth0(1,Head,Lst_Perms),
     numeros_comuns(Lst_Perms,Numeros_comuns),
     nth0(0,Head,PermList),
     atribui_comuns_apply(PermList,Numeros_comuns),
     atribui_comuns(Tail).
 
-atribui_comuns_apply(_,[]):-
+atribui_comuns_apply(_,[]):-% Condicao de Saida
     !.
-atribui_comuns_apply(PermList,[(Index,Replacer)|Tail]):-
+atribui_comuns_apply(PermList,[(Index,Replacer)|Tail]):-%Atribui 
     nth1(Index,PermList,Replacer),
     atribui_comuns_apply(PermList,Tail).
 
 %-------------------------3.1.13-----------------------------------
 
-retira_impossiveis(Perms_Possiveis, Novas_Perms_Possiveis):-
+retira_impossiveis(Perms_Possiveis, Novas_Perms_Possiveis):- % Retira os Impossiveis apos a unificacao anterior
     bagof(Res2,(retira_impossiveis_bagof_unify(Perms_Possiveis, Res2))
           ,Novas_Perms_Possiveis).
 
-retira_impossiveis_bagof_unify(Perms_Possiveis, Res2):-
+retira_impossiveis_bagof_unify(Perms_Possiveis, Res2):- %Unifica 
     member(Perms,Perms_Possiveis),
     nth0(0, Perms, PermsList),
     nth0(1, Perms, WorkList),
     retira_impossiveis_aux(PermsList,WorkList,Res),
     append([PermsList],[Res], Res2).
 
-retira_impossiveis_aux(PermsList,WorkList,Res):-
+retira_impossiveis_aux(PermsList,WorkList,Res):-%Devolve Unificado
     bagof(Possibility,Possibility^(member(Possibility, WorkList),
-    unifica(PermsList,Possibility)),Res).
+        unifica(PermsList,Possibility)),Res).
 
 %-------------------------3.1.14-----------------------------------
 
-simplifica(Perms_Possiveis, Novas_Perms_Possiveis):-
+simplifica(Perms_Possiveis, Novas_Perms_Possiveis):-% Vai simplificar ate nada mudar
     simplifica_aux(Perms_Possiveis, Novas_Perms_Possiveis,_).
 
     
-simplifica_aux(Perms_Possiveis, AuxBag, AuxBag):-
+simplifica_aux(Perms_Possiveis, AuxBag, AuxBag):-%  Condicao de saida
     Perms_Possiveis == AuxBag,!.
 
-simplifica_aux(Perms_Possiveis, Novas_Perms_Possiveis,AuxBag):-
+simplifica_aux(Perms_Possiveis, Novas_Perms_Possiveis,AuxBag):-% Loop recursivo inicial
     var(AuxBag),!,
     atribui_comuns(Perms_Possiveis),
     retira_impossiveis(Perms_Possiveis, Novas_Perms_Possiveis_local),
     simplifica_aux(Perms_Possiveis, Novas_Perms_Possiveis,Novas_Perms_Possiveis_local).
 
-simplifica_aux(_, Novas_Perms_Possiveis,AuxBag):-
+simplifica_aux(_, Novas_Perms_Possiveis,AuxBag):--% Loop recursivo apos primeiro loop
     atribui_comuns(AuxBag),
     retira_impossiveis(AuxBag, Novas_Perms_Possiveis_local),
     simplifica_aux(AuxBag, Novas_Perms_Possiveis,Novas_Perms_Possiveis_local).
 
 %-------------------------3.1.15-----------------------------------
 
-inicializa(Puzzle, Perms_Possiveis):-
+inicializa(Puzzle, Perms_Possiveis):- %Vai inicializar todo o processo de resolver o puzzle.
     espacos_puzzle(Puzzle, Espacos),
     permutacoes_possiveis_espacos(Espacos, Perms_poss_esps),
     simplifica(Perms_poss_esps, Perms_Possiveis).
 
 %------------------------------3.2.1-----------------------------------
 
-escolhe_menos_alternativas(Perms_Possiveis, Escolha):-
+escolhe_menos_alternativas(Perms_Possiveis, Escolha):- % vai escolher de entre todos os membros da lita, o elemento que conter o menor numero de permutacoes possiveis se sejam maiores que 1
     escolhe_menos_alternativas(Perms_Possiveis, Escolha, 0, _).
 
-escolhe_menos_alternativas([],AuxEsp,_,AuxEsp):-
-    var(AuxEsp),fail,!; nonvar(AuxEsp),!.
+escolhe_menos_alternativas([],AuxEsp,_,AuxEsp):- % condicao de saida
+    var(AuxEsp),fail,!; nonvar(AuxEsp),!. 
 
-escolhe_menos_alternativas([Head|Tail], Escolha, AuxLength, AuxEsp):-
+escolhe_menos_alternativas([Head|Tail], Escolha, AuxLength, AuxEsp):-%Loop Recursivo
     get_permPoss_length(Head,Len),
     Len =< 1,!,
     escolhe_menos_alternativas(Tail, Escolha, AuxLength, AuxEsp).
 
-escolhe_menos_alternativas([Head|Tail], Escolha, AuxLength, _):-
+escolhe_menos_alternativas([Head|Tail], Escolha, AuxLength, _):-%Loop Recursivo
     AuxLength == 0,
     get_permPoss_length(Head,Len),
     Len >= 1,!,
     escolhe_menos_alternativas(Tail, Escolha, Len, Head).
 
-escolhe_menos_alternativas([Head|Tail], Escolha, AuxLength, AuxEsp):-
+escolhe_menos_alternativas([Head|Tail], Escolha, AuxLength, AuxEsp):-%Loop Recursivo
     get_permPoss_length(Head,Len),
     Len >= AuxLength,!,
     escolhe_menos_alternativas(Tail, Escolha, AuxLength, AuxEsp).
 
-escolhe_menos_alternativas([Head|Tail], Escolha, _, _):-
+escolhe_menos_alternativas([Head|Tail], Escolha, _, _):-%Loop Recursivo
     get_permPoss_length(Head,Len),
     escolhe_menos_alternativas(Tail, Escolha, Len, Head).
 
 %---------------------------------------3.1.2--------------------------------------
 
-replace_permPoss(Perms_Possiveis,Perm,Replacement,Res):-
+replace_permPoss(Perms_Possiveis,Perm,Replacement,Res):-% vai substituir a permutacao dada nas "Perms_Possiveis"
     maplist(replace_permPoss_aux(Perm,Replacement),Perms_Possiveis,Res).
 
 replace_permPoss_aux(Perm,Replacement,El,Replacement):-
@@ -394,7 +401,7 @@ replace_permPoss_aux(Perm,Replacement,El,Replacement):-
 
 replace_permPoss_aux(_,_,El,El).
 
-experimenta_perm([Esp,Lst_Perms], Perms_Possiveis,Novas_Perms_Possiveis):-
+experimenta_perm([Esp,Lst_Perms], Perms_Possiveis,Novas_Perms_Possiveis):-% vai esprimentar substituir os membros e verificar se funciona
     member(Perm,Lst_Perms),
     unificar(Esp,Perm),
     append([Esp],[[Perm]],El),
@@ -402,23 +409,23 @@ experimenta_perm([Esp,Lst_Perms], Perms_Possiveis,Novas_Perms_Possiveis):-
 
 %--------------------------------------------------------------------------------------
 
-resolve_aux(Perms_Possiveis, Novas_Perms_Possiveis):-
+resolve_aux(Perms_Possiveis, Novas_Perms_Possiveis):-% vai resolver recursivamente ate conseguir obter um resultado
     length(Perms_Possiveis,Len),
     resolve_aux(Perms_Possiveis, Novas_Perms_Possiveis,Len).
     
-resolve_aux(Perms_Possiveis, Novas_Perms_Possiveis,Len):-
+resolve_aux(Perms_Possiveis, Novas_Perms_Possiveis,Len):-%Loop Recursivo
     escolhe_menos_alternativas(Perms_Possiveis, Escolha),!,
 	experimenta_perm(Escolha, Perms_Possiveis, Res01),
     simplifica(Res01,Res02),
     resolve_aux(Res02, Novas_Perms_Possiveis,Len).
     
-resolve_aux(Perms_Possiveis, Perms_Possiveis,Len):-
+resolve_aux(Perms_Possiveis, Perms_Possiveis,Len):-%condicao de saida
     length(Perms_Possiveis,ResLen),
     ResLen == Len,
     !.
 
 %--------------------------------------------------------------------------------------
 
-resolve(Puz):-
+resolve(Puz):-%Resolve O Puzzle envocando os predicados anteriores
     inicializa(Puz, Perms_Possiveis),
     resolve_aux(Perms_Possiveis, _).
